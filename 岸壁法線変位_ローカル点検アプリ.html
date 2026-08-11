@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>岸壁法線変位 ローカル点検アプリ</title>
+  <style>
+    :root{
+      --navy:#123047;--navy2:#1c4662;--blue:#1976a3;--cyan:#e9f6fb;
+      --paper:#fff;--bg:#eef2f4;--line:#d4dde2;--ink:#1d2b34;--muted:#62727c;
+      --ok:#18794e;--okbg:#e7f6ee;--warn:#a35b00;--warnbg:#fff3d6;
+      --danger:#b42318;--dangerbg:#fff0ee;--shadow:0 8px 28px rgba(18,48,71,.09);
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Yu Gothic UI","Hiragino Kaku Gothic ProN",Meiryo,sans-serif;line-height:1.55}
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    .app-header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:white;padding:18px max(18px,calc((100vw - 1240px)/2));position:sticky;top:0;z-index:20;box-shadow:0 3px 16px rgba(0,0,0,.16)}
+    .header-row{display:flex;align-items:center;gap:18px;justify-content:space-between}
+    .brand{display:flex;gap:12px;align-items:center;min-width:0}
+    .brand-mark{width:42px;height:42px;border:2px solid #83d0e8;border-radius:11px;display:grid;place-items:center;font-weight:800;letter-spacing:-1px;flex:0 0 auto}
+    h1{font-size:20px;line-height:1.25;margin:0}.subtitle{font-size:12px;color:#c8e0ec;margin-top:2px}
+    .save-state{font-size:12px;color:#d9edf5;white-space:nowrap}.save-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#6ee7b7;margin-right:6px}
+    .shell{max-width:1240px;margin:0 auto;padding:22px 18px 60px}
+    .topbar{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:end;margin-bottom:18px}
+    .project-fields{display:grid;grid-template-columns:minmax(180px,1.5fr) minmax(150px,1fr) minmax(130px,.7fr);gap:10px}
+    label{display:block;color:var(--muted);font-size:12px;font-weight:700}
+    input,select,textarea{width:100%;margin-top:5px;border:1px solid #bdc9cf;border-radius:9px;background:#fff;color:var(--ink);padding:10px 11px;outline:none;transition:.15s}
+    input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(25,118,163,.12)}
+    input[type=number]{font-variant-numeric:tabular-nums}
+    .facility-picker{display:flex;gap:8px;align-items:end}.facility-picker label{min-width:200px}
+    .tabs{display:flex;gap:5px;overflow:auto;padding:5px;background:#dfe7eb;border-radius:12px;margin-bottom:18px;scrollbar-width:thin}
+    .tab{border:0;background:transparent;color:#48606e;border-radius:9px;padding:9px 15px;font-weight:800;white-space:nowrap}
+    .tab.active{background:white;color:var(--navy);box-shadow:0 2px 8px rgba(18,48,71,.10)}
+    .panel{display:none}.panel.active{display:block}
+    .card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:16px}
+    .card h2,.card h3{margin:0 0 14px;color:var(--navy)}.card h2{font-size:18px}.card h3{font-size:15px}
+    .section-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:14px}.section-head h2{margin:0}
+    .grid{display:grid;gap:13px}.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+    .metric{background:#f7fafb;border:1px solid #dae4e9;border-radius:12px;padding:15px}.metric .k{font-size:12px;color:var(--muted);font-weight:700}.metric .v{font-size:26px;font-weight:850;color:var(--navy);margin-top:3px;font-variant-numeric:tabular-nums}.metric .u{font-size:12px;color:var(--muted);margin-left:3px}
+    .notice{border-left:4px solid var(--blue);background:var(--cyan);padding:12px 14px;border-radius:8px;color:#284b5f;font-size:13px;margin:12px 0}
+    .notice.warn{border-color:#d18a18;background:var(--warnbg);color:#764400}.notice.danger{border-color:var(--danger);background:var(--dangerbg);color:#842018}
+    .btn{border:1px solid transparent;border-radius:9px;padding:9px 14px;font-weight:800;background:var(--navy);color:#fff;box-shadow:0 2px 7px rgba(18,48,71,.12)}
+    .btn:hover{filter:brightness(1.08)}.btn:active{transform:translateY(1px)}
+    .btn.secondary{background:#fff;color:var(--navy);border-color:#aebdc5;box-shadow:none}.btn.ghost{background:transparent;color:var(--navy);border-color:transparent;box-shadow:none}.btn.danger{background:#fff;color:var(--danger);border-color:#e7aaa5;box-shadow:none}.btn.small{padding:6px 10px;font-size:12px}.btn:disabled{opacity:.45;cursor:not-allowed}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:11px}
+    table{width:100%;border-collapse:collapse;background:white;font-size:13px}
+    th,td{padding:10px 9px;border-bottom:1px solid #e1e7ea;text-align:left;vertical-align:middle;white-space:nowrap}
+    th{position:sticky;top:0;background:#f0f5f7;color:#435b69;font-size:12px;z-index:1}
+    tr:last-child td{border-bottom:0}tbody tr:hover{background:#f8fbfc}
+    td input{margin:0;min-width:90px;padding:7px 8px}td textarea{margin:0;min-width:170px;padding:7px 8px;min-height:38px;resize:vertical}
+    .num{text-align:right;font-variant-numeric:tabular-nums}.center{text-align:center}
+    .badge{display:inline-flex;align-items:center;border-radius:999px;padding:4px 9px;font-weight:800;font-size:11px;white-space:nowrap}
+    .badge.ok{color:var(--ok);background:var(--okbg)}.badge.warn{color:var(--warn);background:var(--warnbg)}.badge.danger{color:var(--danger);background:var(--dangerbg)}.badge.muted{color:#536672;background:#edf1f3}
+    .zone-list{display:grid;gap:12px}.zone-card{border:1px solid var(--line);border-radius:12px;background:white;overflow:hidden}.zone-head{display:flex;justify-content:space-between;align-items:center;gap:12px;background:#f5f8f9;padding:12px 14px;border-bottom:1px solid var(--line)}.zone-title{font-weight:850;color:var(--navy)}.zone-body{padding:14px}
+    .zone-stats{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-bottom:12px}
+    .photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}.photo{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#f8fafb}.photo img{display:block;width:100%;height:150px;object-fit:cover;background:#dfe7ea}.photo-meta{padding:9px}.photo-meta input,.photo-meta select{margin-top:4px;padding:6px 7px;font-size:12px}.photo-meta .actions{margin-top:7px;justify-content:flex-end}
+    .upload{border:1.5px dashed #93a9b5;background:#f7fbfc;color:#365769;border-radius:10px;min-height:150px;display:grid;place-items:center;text-align:center;padding:16px;font-size:13px;font-weight:750;cursor:pointer}.upload:hover{border-color:var(--blue);background:var(--cyan)}.upload input{display:none}
+    .empty{text-align:center;padding:34px 18px;color:var(--muted);border:1px dashed #bdc9cf;border-radius:11px;background:#fafcfc}.empty strong{display:block;color:#425967;margin-bottom:4px}
+    .progress{height:8px;background:#e3eaed;border-radius:99px;overflow:hidden}.progress>span{display:block;height:100%;background:linear-gradient(90deg,#1c83ad,#40b6bd);border-radius:inherit}
+    .footnote{font-size:12px;color:var(--muted)}
+    .danger-zone{border-color:#efc5c1}.hidden{display:none!important}
+    #toast{position:fixed;right:18px;bottom:18px;z-index:100;background:#19384d;color:white;border-radius:10px;padding:11px 15px;box-shadow:0 8px 25px rgba(0,0,0,.22);opacity:0;transform:translateY(12px);pointer-events:none;transition:.22s;max-width:360px;font-size:13px}#toast.show{opacity:1;transform:none}
+    #print-area{display:none}
+    @media(max-width:850px){.app-header{position:static}.topbar{grid-template-columns:1fr}.project-fields{grid-template-columns:1fr 1fr}.project-fields label:first-child{grid-column:1/-1}.facility-picker{justify-content:stretch}.facility-picker label{flex:1}.summary-grid,.grid-4{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.shell{padding:14px 10px 45px}.app-header{padding:14px}.subtitle,.save-state{display:none}.brand-mark{width:36px;height:36px}.card{padding:15px}.project-fields,.grid-2,.grid-3,.grid-4,.summary-grid{grid-template-columns:1fr}.facility-picker{flex-wrap:wrap}.facility-picker label{min-width:100%}.section-head{align-items:flex-start;flex-direction:column}.metric .v{font-size:23px}}
+    @media print{
+      @page{size:A4 landscape;margin:10mm}body{background:#fff;color:#000;font-size:9pt}.app-header,.shell,#toast{display:none!important}#print-area{display:block!important}.print-page{page-break-after:always}.print-page:last-child{page-break-after:auto}.print-title{border-bottom:2px solid #123047;padding-bottom:5mm;margin-bottom:5mm}.print-title h1{font-size:18pt}.print-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3mm;margin-bottom:5mm}.print-box{border:1px solid #aaa;padding:3mm}.print-table{width:100%;font-size:8pt}.print-table th,.print-table td{padding:1.8mm;border:1px solid #aaa;white-space:normal}.print-photos{display:grid;grid-template-columns:1fr 1fr;gap:5mm}.print-photo{break-inside:avoid;border:1px solid #aaa;padding:3mm}.print-photo img{width:100%;height:70mm;object-fit:contain}.print-note{font-size:8pt;margin-top:4mm}
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-row">
+      <div class="brand"><div class="brand-mark">岸変</div><div><h1>岸壁法線変位 ローカル点検アプリ</h1><div class="subtitle">端末内保存・オフライン運用</div></div></div>
+      <div id="save-state" class="save-state"><span class="save-dot"></span>読込中</div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="topbar">
+      <div class="project-fields">
+        <label>案件名<input id="project-name" data-project="name" placeholder="例：令和○年 ○○港緊急点検"></label>
+        <label>点検日<input id="inspection-date" data-project="inspectionDate" type="date"></label>
+        <label>点検者<input id="inspector" data-project="inspector" placeholder="氏名"></label>
+      </div>
+      <div class="facility-picker">
+        <label>対象施設<select id="facility-select"></select></label>
+        <button class="btn secondary" id="add-facility">施設追加</button>
+      </div>
+    </section>
+
+    <nav class="tabs" aria-label="画面切替">
+      <button class="tab active" data-tab="overview">概要</button>
+      <button class="tab" data-tab="settings">施設設定</button>
+      <button class="tab" data-tab="measurements">測点計測</button>
+      <button class="tab" data-tab="zones">10m区画・写真</button>
+      <button class="tab" data-tab="export">出力・復元</button>
+    </nav>
+
+    <section id="panel-overview" class="panel active">
+      <div class="card">
+        <div class="section-head"><h2>点検状況</h2><span id="overview-facility" class="badge muted"></span></div>
+        <div id="summary-grid" class="summary-grid"></div>
+        <div style="margin-top:16px"><div class="progress"><span id="completion-bar" style="width:0"></span></div><div id="completion-text" class="footnote" style="margin-top:6px"></div></div>
+      </div>
+      <div class="card">
+        <h2>判定の考え方</h2>
+        <div class="grid grid-2">
+          <div class="notice"><strong>代表値</strong><br>2回の計測値のうち、絶対値が大きい値を符号付きで採用します。海側がプラス、陸側がマイナスです。</div>
+          <div class="notice warn"><strong>抽出・利用保留</strong><br>代表値の絶対値が設定基準以上の測点を含む区画を抽出します。利用可能を保証する判定ではありません。</div>
+        </div>
+        <div id="threshold-warning" class="notice danger hidden"></div>
+      </div>
+      <div class="card">
+        <h2>重要な運用上の注意</h2>
+        <ul class="footnote">
+          <li>ブラウザの履歴・サイトデータを消すと自動保存データが消える場合があります。点検後は必ずExcelまたはJSONを出力してください。</li>
+          <li>HTMLファイルを別の場所・別の端末で開くと保存領域も別になります。移行時はJSONで保存・復元してください。</li>
+          <li>設定基準は抽出・利用保留の基準であり、利用可能を保証する判定ではありません。</li>
+          <li>災害前データがない場合、施設全体と背後地が一様に動く変位は単独では検出できません。</li>
+          <li>水中部、洗掘、障害物、構造安全性は別途確認してください。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="panel-settings" class="panel">
+      <div class="card">
+        <div class="section-head"><h2>施設設定</h2><button id="delete-facility" class="btn danger small">この施設を削除</button></div>
+        <div class="grid grid-4">
+          <label>施設名<input data-facility="name" placeholder="例：第1岸壁"></label>
+          <label>施設延長（m）<input data-facility="length" type="number" min="0.1" step="0.1"></label>
+          <label>スパン延長（m）<input data-facility="spanLength" type="number" min="0.1" step="0.1"></label>
+          <label>測点間隔（m）<input data-facility="pointInterval" type="number" min="0.1" step="0.1"></label>
+          <label>再現性許容差（cm）<input data-facility="tolerance" type="number" min="0" step="0.1"></label>
+          <label>変位評価基準（cm・絶対値）<input data-facility="threshold" type="number" min="0" step="0.1"></label>
+          <label>海側の符号<input value="プラス（＋）" disabled></label>
+          <label>区画最大長<input value="10 m（均等分割）" disabled></label>
+        </div>
+        <div class="notice">施設延長を10m以下の同じ長さに均等分割します。測点は各スパンの起点から間隔をリセットし、施設起点・終点を必ず含めます。重複位置は1測点に統合します。</div>
+        <div class="actions"><button id="apply-settings" class="btn">設定を反映して再生成</button><span class="footnote">既存測点と同じ距離の計測値は引き継ぎます。なくなる測点の値は削除されます。</span></div>
+      </div>
+      <div class="card"><h2>生成結果</h2><div id="generation-preview"></div></div>
+      <div class="card">
+        <h2>点検補足情報</h2>
+        <div class="grid grid-3">
+          <label>天候<input data-facility="weather" placeholder="例：晴れ"></label>
+          <label>潮位・海象<input data-facility="tide" placeholder="例：満潮前、波浪小"></label>
+          <label>測定方法・機器<input data-facility="method" placeholder="例：トータルステーション"></label>
+        </div>
+        <label style="margin-top:12px">基準点・基準線、その他備考<textarea data-facility="notes" rows="3" placeholder="基準データの扱いなど、後から確定した事項を記録"></textarea></label>
+      </div>
+    </section>
+
+    <section id="panel-measurements" class="panel">
+      <div class="card">
+        <div class="section-head"><div><h2>測点計測</h2><div class="footnote">入力値：災害前後の差（cm）／海側＋・陸側－</div></div><div class="actions"><button id="clear-measurements" class="btn danger small">計測値を全消去</button></div></div>
+        <div id="measurement-table"></div>
+      </div>
+    </section>
+
+    <section id="panel-zones" class="panel">
+      <div class="card">
+        <div class="section-head"><div><h2>10m区画・現場写真</h2><div class="footnote">写真は1区画5枚まで。取込時に長辺1600pxへ縮小して端末内に保存します。</div></div></div>
+        <div id="zone-list" class="zone-list"></div>
+      </div>
+    </section>
+
+    <section id="panel-export" class="panel">
+      <div class="card">
+        <h2>成果品の出力</h2>
+        <div class="grid grid-3">
+          <div><h3>Excel</h3><p class="footnote">概要、測点結果、区画判定、写真帳を.xlsx形式で出力します。</p><button id="export-excel" class="btn">Excelを出力</button></div>
+          <div><h3>JSONバックアップ</h3><p class="footnote">全施設・写真を含むデータを、別端末で復元できる形式で保存します。</p><button id="export-json" class="btn secondary">JSONを保存</button></div>
+          <div><h3>印刷・PDF</h3><p class="footnote">ブラウザの印刷画面から、紙への印刷またはPDF保存ができます。</p><button id="print-report" class="btn secondary">印刷画面を開く</button></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>JSONから復元</h2>
+        <p class="footnote">現在のデータは復元前に自動でJSONとして退避し、その後バックアップ内容で置き換えます。</p>
+        <label class="upload" style="min-height:110px">JSONファイルを選択して復元<input id="import-json" type="file" accept="application/json,.json"></label>
+      </div>
+      <div class="card danger-zone">
+        <h2>端末内データ</h2>
+        <p class="footnote">全施設、計測値、写真を初期状態に戻します。この操作は元に戻せません。</p>
+        <button id="reset-all" class="btn danger">すべてのデータを初期化</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+  <section id="print-area"></section>
+
+  <script>
+  (()=>{
+    'use strict';
+    const APP_VERSION=1, DB_NAME='quay-normal-displacement-db', STORE='state', KEY='main';
+    const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+    const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const n=v=>Number.isFinite(Number(v))?Number(v):0;
+    const fmt=(v,d=1)=>Number(v).toLocaleString('ja-JP',{minimumFractionDigits:d,maximumFractionDigits:d});
+    const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,9);
+    const today=()=>new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Tokyo'});
+    const defaultFacility=(name='施設1')=>({id:uid(),name,length:100,spanLength:20,pointInterval:10,tolerance:50,threshold:20,weather:'',tide:'',method:'',notes:'',spans:[],zones:[],points:[]});
+    let state={version:APP_VERSION,name:'',inspectionDate:today(),inspector:'',activeFacilityId:'',facilities:[]};
+    let saveTimer=null,toastTimer=null,db=null;
+
+    function initState(){const f=defaultFacility();generate(f,false);state.facilities=[f];state.activeFacilityId=f.id}
+    function activeFacility(){return state.facilities.find(f=>f.id===state.activeFacilityId)||state.facilities[0]}
+    function round(v,d=4){const p=10**d;return Math.round((v+Number.EPSILON)*p)/p}
+    function generate(f,preserve=true){
+      const L=Math.max(.1,n(f.length)), spanL=Math.max(.1,n(f.spanLength)), interval=Math.max(.1,n(f.pointInterval));
+      const old=new Map((f.points||[]).map(p=>[round(p.distance,3),p]));
+      const oldZones=f.zones||[];
+      const zoneCount=Math.max(1,Math.ceil(L/10));
+      f.zones=Array.from({length:zoneCount},(_,i)=>{const start=round(L*i/zoneCount),end=round(L*(i+1)/zoneCount);const prev=oldZones.find(z=>Math.abs(n(z.start)-start)<.001&&Math.abs(n(z.end)-end)<.001);return{id:prev?.id||uid(),number:i+1,start,end,photos:prev?.photos||[],notes:prev?.notes||''}});
+      const spanCount=Math.max(1,Math.ceil(L/spanL));
+      f.spans=Array.from({length:spanCount},(_,i)=>({id:uid(),number:i+1,start:round(i*spanL),end:round(Math.min(L,(i+1)*spanL))}));
+      const ds=[];
+      f.spans.forEach(s=>{let d=s.start;while(d<s.end-.00001){ds.push(round(d));d+=interval}ds.push(round(s.end))});
+      const distances=[...new Set(ds.map(x=>round(x,3)))].sort((a,b)=>a-b);
+      f.points=distances.map((distance,i)=>{const prev=preserve?old.get(round(distance,3)):null;const span=f.spans.find(s=>distance>=s.start-.001&&distance<=s.end+.001);const zone=zoneForDistance(f,distance);return{id:prev?.id||uid(),number:i+1,distance,spanNumber:span?.number||1,zoneId:zone?.id||'',m1:prev?.m1??'',m2:prev?.m2??'',notes:prev?.notes||''}});
+    }
+    function zoneForDistance(f,d){return f.zones.find((z,i)=>i===0?d>=z.start-.001&&d<=z.end+.001:d>z.start+.001&&d<=z.end+.001)||f.zones.at(-1)}
+    function resultFor(p,f){
+      if(p.m1===''||p.m2===''||!Number.isFinite(Number(p.m1))||!Number.isFinite(Number(p.m2)))return{status:'未計測',cls:'muted',rep:null,diff:null};
+      const a=n(p.m1),b=n(p.m2),diff=Math.abs(a-b),rep=Math.abs(a)>=Math.abs(b)?a:b;
+      if(diff>n(f.tolerance))return{status:'要再計測',cls:'warn',rep,diff};
+      if(Math.abs(rep)>=n(f.threshold))return{status:'基準該当',cls:'danger',rep,diff};
+      return{status:'基準未満',cls:'ok',rep,diff};
+    }
+    function zoneResult(z,f){const ps=f.points.filter(p=>p.zoneId===z.id),rs=ps.map(p=>resultFor(p,f));if(rs.some(r=>r.status==='要再計測'))return{status:'判定保留',cls:'warn'};if(rs.some(r=>r.status==='基準該当'))return{status:'抽出・利用保留',cls:'danger'};if(rs.length&&rs.every(r=>r.status==='基準未満'))return{status:'基準未満',cls:'ok'};return{status:'未計測',cls:'muted'}}
+
+    async function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>req.result.createObjectStore(STORE);req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
+    async function load(){
+      try{db=await openDB();const data=await new Promise((resolve,reject)=>{const q=db.transaction(STORE).objectStore(STORE).get(KEY);q.onsuccess=()=>resolve(q.result);q.onerror=()=>reject(q.error)});if(data&&data.facilities?.length){state=migrate(data)}else initState()}
+      catch(e){try{const raw=localStorage.getItem(DB_NAME);if(raw)state=migrate(JSON.parse(raw));else initState()}catch(_){initState()}toast('保存領域を簡易モードで使用します')}
+      renderAll();setSaveState('保存済み');
+    }
+    function migrate(data){const x={...data,version:APP_VERSION};x.facilities=(x.facilities||[]).map((f,i)=>({...defaultFacility(`施設${i+1}`),...f}));if(!x.activeFacilityId||!x.facilities.some(f=>f.id===x.activeFacilityId))x.activeFacilityId=x.facilities[0]?.id||'';x.facilities.forEach(f=>{if(!f.zones?.length||!f.points?.length)generate(f,true)});return x}
+    function scheduleSave(){setSaveState('保存中…',true);clearTimeout(saveTimer);saveTimer=setTimeout(saveNow,500)}
+    async function saveNow(){state.version=APP_VERSION;try{if(db)await new Promise((resolve,reject)=>{const q=db.transaction(STORE,'readwrite').objectStore(STORE).put(state,KEY);q.onsuccess=()=>resolve();q.onerror=()=>reject(q.error)});else localStorage.setItem(DB_NAME,JSON.stringify(state));setSaveState('保存済み')}catch(e){setSaveState('保存失敗',false,true);toast('自動保存に失敗しました。写真を減らすかJSONを出力してください。',5000)}}
+    function setSaveState(text,saving=false,error=false){const el=$('#save-state');el.innerHTML=`<span class="save-dot" style="background:${error?'#fb7185':saving?'#fbbf24':'#6ee7b7'}"></span>${esc(text)}${!saving&&!error?'・'+new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'}):''}`}
+    function toast(msg,ms=2600){const el=$('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),ms)}
+
+    function renderAll(){renderProject();renderFacilityPicker();renderFacilityInputs();renderOverview();renderPreview();renderMeasurements();renderZones()}
+    function renderProject(){$$('[data-project]').forEach(el=>el.value=state[el.dataset.project]??'')}
+    function renderFacilityPicker(){const s=$('#facility-select');s.innerHTML=state.facilities.map(f=>`<option value="${f.id}">${esc(f.name)}</option>`).join('');s.value=state.activeFacilityId}
+    function renderFacilityInputs(){const f=activeFacility();if(!f)return;$$('[data-facility]').forEach(el=>el.value=f[el.dataset.facility]??'')}
+    function renderOverview(){
+      const f=activeFacility();if(!f)return;const rs=f.points.map(p=>resultFor(p,f)),done=rs.filter(r=>r.status!=='未計測').length,flag=f.zones.filter(z=>zoneResult(z,f).status==='抽出・利用保留').length,pending=f.zones.filter(z=>zoneResult(z,f).status==='判定保留').length;
+      $('#overview-facility').textContent=f.name;$('#summary-grid').innerHTML=`
+        <div class="metric"><div class="k">施設延長</div><div class="v">${fmt(f.length)}<span class="u">m</span></div></div>
+        <div class="metric"><div class="k">測点</div><div class="v">${f.points.length}<span class="u">点</span></div></div>
+        <div class="metric"><div class="k">抽出区画</div><div class="v" style="color:${flag?'var(--danger)':'var(--navy)'}">${flag}<span class="u">区画</span></div></div>
+        <div class="metric"><div class="k">判定保留</div><div class="v" style="color:${pending?'var(--warn)':'var(--navy)'}">${pending}<span class="u">区画</span></div></div>`;
+      const pct=f.points.length?Math.round(done/f.points.length*100):0;$('#completion-bar').style.width=pct+'%';$('#completion-text').textContent=`計測入力 ${done} / ${f.points.length} 点（${pct}%）`;
+      const w=$('#threshold-warning');if(n(f.tolerance)>n(f.threshold)){w.classList.remove('hidden');w.innerHTML=`再現性許容差（${fmt(f.tolerance)}cm）が変位評価基準（${fmt(f.threshold)}cm）より大きく設定されています。運用意図どおりか確認してください。`}else w.classList.add('hidden');
+    }
+    function renderPreview(){const f=activeFacility();if(!f)return;$('#generation-preview').innerHTML=`<div class="summary-grid"><div class="metric"><div class="k">10m区画</div><div class="v">${f.zones.length}<span class="u">区画</span></div></div><div class="metric"><div class="k">均等区画長</div><div class="v">${fmt(f.length/f.zones.length,2)}<span class="u">m</span></div></div><div class="metric"><div class="k">スパン</div><div class="v">${f.spans.length}<span class="u">径間</span></div></div><div class="metric"><div class="k">測点</div><div class="v">${f.points.length}<span class="u">点</span></div></div></div><div class="table-wrap" style="margin-top:14px"><table><thead><tr><th>区画</th><th>範囲</th><th>所属測点</th></tr></thead><tbody>${f.zones.map(z=>`<tr><td>区画${z.number}</td><td>${fmt(z.start)}m超 ～ ${fmt(z.end)}m以下${z.number===1?'（起点含む）':''}</td><td>${f.points.filter(p=>p.zoneId===z.id).map(p=>'P'+p.number).join('、')||'—'}</td></tr>`).join('')}</tbody></table></div>`}
+    function renderMeasurements(){
+      const f=activeFacility();if(!f)return;const host=$('#measurement-table');if(!f.points.length){host.innerHTML='<div class="empty"><strong>測点がありません</strong>施設設定を反映してください。</div>';return}
+      host.innerHTML=`<div class="table-wrap"><table><thead><tr><th>測点</th><th>距離</th><th>スパン</th><th>10m区画</th><th>1回目（cm）</th><th>2回目（cm）</th><th>差（cm）</th><th>代表値（cm）</th><th>判定</th><th>備考</th></tr></thead><tbody>${f.points.map(p=>{const r=resultFor(p,f),z=f.zones.find(z=>z.id===p.zoneId);return`<tr data-point="${p.id}"><td><strong>P${p.number}</strong></td><td class="num">${fmt(p.distance)}m</td><td>S${p.spanNumber}</td><td>区画${z?.number||''}</td><td><input type="number" step="0.1" data-pfield="m1" value="${esc(p.m1)}" aria-label="P${p.number} 1回目"></td><td><input type="number" step="0.1" data-pfield="m2" value="${esc(p.m2)}" aria-label="P${p.number} 2回目"></td><td class="num result-diff">${r.diff===null?'—':fmt(r.diff)}</td><td class="num result-rep">${r.rep===null?'—':fmt(r.rep)}</td><td class="result-status"><span class="badge ${r.cls}">${r.status}</span></td><td><textarea data-pfield="notes" aria-label="P${p.number} 備考">${esc(p.notes)}</textarea></td></tr>`}).join('')}</tbody></table></div>`;
+    }
+    function refreshPointRow(tr,p,f){const r=resultFor(p,f);$('.result-diff',tr).textContent=r.diff===null?'—':fmt(r.diff);$('.result-rep',tr).textContent=r.rep===null?'—':fmt(r.rep);$('.result-status',tr).innerHTML=`<span class="badge ${r.cls}">${r.status}</span>`}
+    function renderZones(){
+      const f=activeFacility();if(!f)return;const host=$('#zone-list');host.innerHTML=f.zones.map(z=>{const zr=zoneResult(z,f),ps=f.points.filter(p=>p.zoneId===z.id),photos=z.photos||[];return`<article class="zone-card" data-zone="${z.id}"><div class="zone-head"><div><span class="zone-title">区画${z.number}</span> <span class="footnote">${fmt(z.start)}m ～ ${fmt(z.end)}m</span></div><span class="badge ${zr.cls}">${zr.status}</span></div><div class="zone-body"><div class="zone-stats"><span>所属測点：${ps.map(p=>'P'+p.number).join('、')||'なし'}</span><span>写真：${photos.length}/5枚</span></div><label>区画所見<textarea data-zone-notes rows="2" placeholder="損傷、周辺状況、確認事項など">${esc(z.notes)}</textarea></label><div class="photo-grid" style="margin-top:10px">${photos.map(ph=>`<div class="photo" data-photo="${ph.id}"><img src="${ph.data}" alt="区画${z.number} 現場写真"><div class="photo-meta"><label>撮影方向<select data-photo-field="direction">${['未設定','海側','陸側','起点側','終点側','その他'].map(x=>`<option ${ph.direction===x?'selected':''}>${x}</option>`).join('')}</select></label><label>説明<input data-photo-field="caption" value="${esc(ph.caption)}" placeholder="写真説明"></label><div class="actions"><button class="btn danger small" data-remove-photo>削除</button></div></div></div>`).join('')}<label class="upload ${photos.length>=5?'hidden':''}">写真を追加<br><span class="footnote">JPEG / PNG / HEIC等</span><input type="file" accept="image/*" multiple data-photo-input></label></div></div></article>`}).join('')||'<div class="empty"><strong>区画がありません</strong>施設設定を反映してください。</div>';
+    }
+
+    function bind(){
+      $$('.tab').forEach(b=>b.addEventListener('click',()=>{$$('.tab').forEach(x=>x.classList.toggle('active',x===b));$$('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+b.dataset.tab));if(b.dataset.tab==='zones')renderZones();if(b.dataset.tab==='overview')renderOverview()}));
+      $$('[data-project]').forEach(el=>el.addEventListener('input',()=>{state[el.dataset.project]=el.value;scheduleSave()}));
+      $('#facility-select').addEventListener('change',e=>{state.activeFacilityId=e.target.value;renderAll();scheduleSave()});
+      $('#add-facility').addEventListener('click',()=>{const f=defaultFacility(`施設${state.facilities.length+1}`);generate(f,false);state.facilities.push(f);state.activeFacilityId=f.id;renderAll();scheduleSave();toast('施設を追加しました')});
+      $$('[data-facility]').forEach(el=>el.addEventListener('input',()=>{const f=activeFacility();f[el.dataset.facility]=el.type==='number'?n(el.value):el.value;if(el.dataset.facility==='name')renderFacilityPicker();scheduleSave()}));
+      $('#apply-settings').addEventListener('click',()=>{const f=activeFacility();if(n(f.length)<=0||n(f.spanLength)<=0||n(f.pointInterval)<=0){toast('施設延長・スパン延長・測点間隔は0より大きい値にしてください');return}const old=f.points.length;generate(f,true);renderAll();scheduleSave();toast(`再生成しました（${old}点 → ${f.points.length}点）`)});
+      $('#delete-facility').addEventListener('click',()=>{if(state.facilities.length===1){toast('施設は最低1件必要です');return}const f=activeFacility();if(!confirm(`「${f.name}」と、その計測値・写真を削除しますか？`))return;state.facilities=state.facilities.filter(x=>x.id!==f.id);state.activeFacilityId=state.facilities[0].id;renderAll();scheduleSave();toast('施設を削除しました')});
+      $('#measurement-table').addEventListener('input',e=>{const field=e.target.dataset.pfield;if(!field)return;const tr=e.target.closest('[data-point]'),f=activeFacility(),p=f.points.find(p=>p.id===tr.dataset.point);p[field]=field==='notes'?e.target.value:e.target.value;refreshPointRow(tr,p,f);renderOverview();scheduleSave()});
+      $('#clear-measurements').addEventListener('click',()=>{const f=activeFacility();if(!confirm(`「${f.name}」の全測点の計測値を消去しますか？`))return;f.points.forEach(p=>{p.m1='';p.m2=''});renderMeasurements();renderOverview();renderZones();scheduleSave();toast('計測値を消去しました')});
+      $('#zone-list').addEventListener('input',e=>{const card=e.target.closest('[data-zone]');if(!card)return;const z=activeFacility().zones.find(z=>z.id===card.dataset.zone);if(e.target.matches('[data-zone-notes]'))z.notes=e.target.value;const phEl=e.target.closest('[data-photo]');if(phEl&&e.target.dataset.photoField){const ph=z.photos.find(p=>p.id===phEl.dataset.photo);ph[e.target.dataset.photoField]=e.target.value}scheduleSave()});
+      $('#zone-list').addEventListener('change',async e=>{if(!e.target.matches('[data-photo-input]'))return;const card=e.target.closest('[data-zone]'),z=activeFacility().zones.find(z=>z.id===card.dataset.zone),files=[...e.target.files].slice(0,5-z.photos.length);if(!files.length)return;toast('写真を取り込んでいます…',5000);for(const file of files){try{const data=await resizeImage(file,1600);z.photos.push({id:uid(),data,caption:'',direction:'未設定',takenAt:new Date(file.lastModified||Date.now()).toISOString()})}catch(err){toast(`${file.name}を読み込めませんでした`,4000)}}renderZones();scheduleSave();toast(`${files.length}枚の写真を追加しました`)});
+      $('#zone-list').addEventListener('click',e=>{const b=e.target.closest('[data-remove-photo]');if(!b)return;const card=b.closest('[data-zone]'),phEl=b.closest('[data-photo]'),z=activeFacility().zones.find(z=>z.id===card.dataset.zone);z.photos=z.photos.filter(p=>p.id!==phEl.dataset.photo);renderZones();scheduleSave()});
+      $('#export-json').addEventListener('click',()=>downloadJSON());
+      $('#import-json').addEventListener('change',importJSON);
+      $('#export-excel').addEventListener('click',exportExcel);
+      $('#print-report').addEventListener('click',printReport);
+      $('#reset-all').addEventListener('click',async()=>{if(!confirm('すべての施設、計測値、写真を初期化します。よろしいですか？'))return;if(!confirm('この操作は元に戻せません。本当に初期化しますか？'))return;initState();renderAll();await saveNow();toast('初期化しました')});
+      window.addEventListener('beforeunload',()=>{if(saveTimer){clearTimeout(saveTimer);saveNow()}});
+    }
+
+    function resizeImage(file,max){return new Promise((resolve,reject)=>{const img=new Image(),url=URL.createObjectURL(file);img.onload=()=>{try{let w=img.naturalWidth,h=img.naturalHeight;if(Math.max(w,h)>max){const s=max/Math.max(w,h);w=Math.round(w*s);h=Math.round(h*s)}const c=document.createElement('canvas');c.width=w;c.height=h;const ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);ctx.drawImage(img,0,0,w,h);URL.revokeObjectURL(url);resolve(c.toDataURL('image/jpeg',.84))}catch(e){URL.revokeObjectURL(url);reject(e)}};img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('image load failed'))};img.src=url})}
+    function safeName(s){return String(s||'岸壁法線変位点検').replace(/[\\/:*?"<>|]/g,'_').slice(0,80)}
+    function download(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000)}
+    function downloadJSON(prefix=''){const name=`${prefix}${safeName(state.name)}_${state.inspectionDate||today()}.json`;download(new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),name);toast('JSONを保存しました')}
+    async function importJSON(e){const file=e.target.files[0];e.target.value='';if(!file)return;try{const data=JSON.parse(await file.text());if(!Array.isArray(data.facilities)||!data.facilities.length)throw new Error('形式');downloadJSON('復元前_');state=migrate(data);renderAll();await saveNow();toast('JSONから復元しました')}catch(err){toast('対応するバックアップファイルではありません',4500)}}
+
+    function printReport(){
+      const f=activeFacility(),area=$('#print-area'),rs=f.points.map(p=>resultFor(p,f));
+      area.innerHTML=`<div class="print-page"><div class="print-title"><h1>岸壁法線変位 点検結果</h1><div>${esc(state.name||'案件名未入力')} ／ ${esc(f.name)}</div></div><div class="print-grid"><div class="print-box">点検日<br><strong>${esc(state.inspectionDate||'—')}</strong></div><div class="print-box">点検者<br><strong>${esc(state.inspector||'—')}</strong></div><div class="print-box">施設延長<br><strong>${fmt(f.length)} m</strong></div><div class="print-box">評価基準<br><strong>絶対値 ${fmt(f.threshold)} cm以上</strong></div></div><table class="print-table"><thead><tr><th>測点</th><th>距離</th><th>区画</th><th>1回目</th><th>2回目</th><th>差</th><th>代表値</th><th>判定</th><th>備考</th></tr></thead><tbody>${f.points.map((p,i)=>{const r=rs[i],z=f.zones.find(z=>z.id===p.zoneId);return`<tr><td>P${p.number}</td><td>${fmt(p.distance)}m</td><td>区画${z?.number||''}</td><td>${p.m1===''?'—':fmt(p.m1)}cm</td><td>${p.m2===''?'—':fmt(p.m2)}cm</td><td>${r.diff===null?'—':fmt(r.diff)}cm</td><td>${r.rep===null?'—':fmt(r.rep)}cm</td><td>${r.status}</td><td>${esc(p.notes)}</td></tr>`}).join('')}</tbody></table><p class="print-note">代表値は2回の計測値のうち絶対値が大きい値。再現性許容差 ${fmt(f.tolerance)}cm。基準該当は抽出・利用保留を示し、利用可能を保証するものではありません。</p></div>${f.zones.filter(z=>z.photos.length).map(z=>`<div class="print-page"><div class="print-title"><h1>${esc(f.name)}　区画${z.number} 写真帳</h1><div>${fmt(z.start)}m ～ ${fmt(z.end)}m ／ ${esc(z.notes)}</div></div><div class="print-photos">${z.photos.map(ph=>`<div class="print-photo"><img src="${ph.data}"><div>方向：${esc(ph.direction)}　${esc(ph.caption)}</div></div>`).join('')}</div></div>`).join('')}`;
+      requestAnimationFrame(()=>window.print());
+    }
+
+    // 最小構成のOOXML（無圧縮ZIP）をブラウザ内で生成。外部ライブラリ・通信は不使用。
+    const TE=new TextEncoder();
+    function x(v){return esc(v)}
+    function colName(i){let s='';for(;i>0;i=Math.floor((i-1)/26))s=String.fromCharCode(65+(i-1)%26)+s;return s}
+    function cell(v,r,c,style=0){const ref=colName(c)+r;if(typeof v==='number'&&Number.isFinite(v))return`<c r="${ref}" s="${style}"><v>${v}</v></c>`;return`<c r="${ref}" s="${style}" t="inlineStr"><is><t xml:space="preserve">${x(v??'')}</t></is></c>`}
+    function sheet(rows,widths=[],drawing=false){return`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><cols>${widths.map((w,i)=>`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join('')}</cols><sheetData>${rows.map((row,ri)=>`<row r="${ri+1}"${row.height?` ht="${row.height}" customHeight="1"`:''}>${row.cells.map((v,ci)=>cell(v.v,v.r||ri+1,v.c||ci+1,v.s||0)).join('')}</row>`).join('')}</sheetData>${drawing?'<drawing r:id="rId1"/>':''}</worksheet>`}
+    function dataUrlBytes(url){const raw=atob(url.split(',')[1]),a=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)a[i]=raw.charCodeAt(i);return a}
+    let crcTable=null;function crc32(bytes){if(!crcTable){crcTable=Array.from({length:256},(_,i)=>{let c=i;for(let k=0;k<8;k++)c=(c&1)?0xedb88320^(c>>>1):c>>>1;return c>>>0})}let c=0xffffffff;for(const b of bytes)c=crcTable[(c^b)&255]^(c>>>8);return(c^0xffffffff)>>>0}
+    function u16(v){return new Uint8Array([v&255,(v>>>8)&255])}function u32(v){return new Uint8Array([v&255,(v>>>8)&255,(v>>>16)&255,(v>>>24)&255])}function join(parts){const len=parts.reduce((a,b)=>a+b.length,0),out=new Uint8Array(len);let o=0;for(const p of parts){out.set(p,o);o+=p.length}return out}
+    function zip(files){const locals=[],centrals=[];let offset=0;const dt=new Date(),time=(dt.getHours()<<11)|(dt.getMinutes()<<5)|(dt.getSeconds()>>1),date=((dt.getFullYear()-1980)<<9)|((dt.getMonth()+1)<<5)|dt.getDate();for(const f of files){const name=TE.encode(f.name),data=typeof f.data==='string'?TE.encode(f.data):f.data,crc=crc32(data);const local=join([u32(0x04034b50),u16(20),u16(0x800),u16(0),u16(time),u16(date),u32(crc),u32(data.length),u32(data.length),u16(name.length),u16(0),name,data]);locals.push(local);const central=join([u32(0x02014b50),u16(20),u16(20),u16(0x800),u16(0),u16(time),u16(date),u32(crc),u32(data.length),u32(data.length),u16(name.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(offset),name]);centrals.push(central);offset+=local.length}const centralSize=centrals.reduce((a,b)=>a+b.length,0);return join([...locals,...centrals,u32(0x06054b50),u16(0),u16(0),u16(files.length),u16(files.length),u32(centralSize),u32(offset),u16(0)])}
+    function rowsFrom(values,header=true){return values.map((r,ri)=>({cells:r.map(v=>({v,s:header&&ri===0?1:0}))}))}
+    async function exportExcel(){
+      try{toast('Excelを作成しています…',6000);const f=activeFacility(),files=[];
+        const overview=[['岸壁法線変位 点検結果',''],['案件名',state.name],['施設名',f.name],['点検日',state.inspectionDate],['点検者',state.inspector],['施設延長（m）',n(f.length)],['スパン延長（m）',n(f.spanLength)],['測点間隔（m）',n(f.pointInterval)],['再現性許容差（cm）',n(f.tolerance)],['変位評価基準（cm・絶対値）',n(f.threshold)],['天候',f.weather],['潮位・海象',f.tide],['測定方法・機器',f.method],['備考',f.notes],['注意','基準該当は抽出・利用保留を示し、利用可能を保証するものではありません。']];
+        const pointRows=[['測点','距離(m)','スパン','区画','1回目(cm)','2回目(cm)','計測差(cm)','代表値(cm)','判定','備考'],...f.points.map(p=>{const r=resultFor(p,f),z=f.zones.find(z=>z.id===p.zoneId);return[`P${p.number}`,n(p.distance),`S${p.spanNumber}`,`区画${z?.number||''}`,p.m1===''?'':n(p.m1),p.m2===''?'':n(p.m2),r.diff===null?'':r.diff,r.rep===null?'':r.rep,r.status,p.notes]})];
+        const zoneRows=[['区画','開始(m)','終了(m)','所属測点','判定','写真枚数','区画所見'],...f.zones.map(z=>[`区画${z.number}`,z.start,z.end,f.points.filter(p=>p.zoneId===z.id).map(p=>'P'+p.number).join('、'),zoneResult(z,f).status,z.photos.length,z.notes])];
+        const photos=f.zones.flatMap(z=>z.photos.map(ph=>({z,ph}))),photoRows=[{cells:[{v:'区画'},{v:'範囲'},{v:'撮影方向'},{v:'説明'},{v:'写真',s:1}],height:24}];photos.forEach(({z,ph},i)=>photoRows.push({cells:[{v:`区画${z.number}`},{v:`${fmt(z.start)}m～${fmt(z.end)}m`},{v:ph.direction},{v:ph.caption},{v:''}],height:120}));
+        files.push({name:'xl/worksheets/sheet1.xml',data:sheet(rowsFrom(overview,false),[24,72])},{name:'xl/worksheets/sheet2.xml',data:sheet(rowsFrom(pointRows),[10,12,10,10,14,14,14,14,18,36])},{name:'xl/worksheets/sheet3.xml',data:sheet(rowsFrom(zoneRows),[10,12,12,28,20,12,48])},{name:'xl/worksheets/sheet4.xml',data:sheet(photoRows,[12,24,16,36,28],photos.length>0)});
+        if(photos.length){const anchors=photos.map((_,i)=>`<xdr:twoCellAnchor editAs="oneCell"><xdr:from><xdr:col>4</xdr:col><xdr:colOff>80000</xdr:colOff><xdr:row>${i+1}</xdr:row><xdr:rowOff>80000</xdr:rowOff></xdr:from><xdr:to><xdr:col>5</xdr:col><xdr:colOff>0</xdr:colOff><xdr:row>${i+2}</xdr:row><xdr:rowOff>-80000</xdr:rowOff></xdr:to><xdr:pic><xdr:nvPicPr><xdr:cNvPr id="${i+1}" name="現場写真${i+1}"/><xdr:cNvPicPr/></xdr:nvPicPr><xdr:blipFill><a:blip xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" r:embed="rId${i+1}"/><a:stretch xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:fillRect/></a:stretch></xdr:blipFill><xdr:spPr><a:prstGeom xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" prst="rect"><a:avLst/></a:prstGeom></xdr:spPr></xdr:pic><xdr:clientData/></xdr:twoCellAnchor>`).join('');files.push({name:'xl/drawings/drawing1.xml',data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><xdr:wsDr xmlns:xdr="http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">${anchors}</xdr:wsDr>`},{name:'xl/drawings/_rels/drawing1.xml.rels',data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${photos.map((_,i)=>`<Relationship Id="rId${i+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="../media/image${i+1}.jpg"/>`).join('')}</Relationships>`},{name:'xl/worksheets/_rels/sheet4.xml.rels',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing" Target="../drawings/drawing1.xml"/></Relationships>'});photos.forEach(({ph},i)=>files.push({name:`xl/media/image${i+1}.jpg`,data:dataUrlBytes(ph.data)}))}
+        files.push({name:'[Content_Types].xml',data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="jpg" ContentType="image/jpeg"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>${[1,2,3,4].map(i=>`<Override PartName="/xl/worksheets/sheet${i}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join('')}${photos.length?'<Override PartName="/xl/drawings/drawing1.xml" ContentType="application/vnd.openxmlformats-officedocument.drawing+xml"/>':''}</Types>`},{name:'_rels/.rels',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'},{name:'xl/workbook.xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="点検概要" sheetId="1" r:id="rId1"/><sheet name="測点結果" sheetId="2" r:id="rId2"/><sheet name="区画判定" sheetId="3" r:id="rId3"/><sheet name="写真帳" sheetId="4" r:id="rId4"/></sheets></workbook>'},{name:'xl/_rels/workbook.xml.rels',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet3.xml"/><Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet4.xml"/><Relationship Id="rId5" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'},{name:'xl/styles.xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="10"/><name val="Yu Gothic"/></font><font><b/><color rgb="FFFFFFFF"/><sz val="10"/><name val="Yu Gothic"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF123047"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"><alignment vertical="center"/></xf></cellXfs></styleSheet>'});
+        const bytes=zip(files);download(new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),`${safeName(state.name)}_${safeName(f.name)}_${state.inspectionDate||today()}.xlsx`);toast('Excelを出力しました')
+      }catch(e){console.error(e);toast('Excel出力に失敗しました。JSONを保存してデータを保護してください。',5000)}
+    }
+
+    bind();load();
+  })();
+  </script>
+</body>
+</html>
