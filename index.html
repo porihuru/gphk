@@ -80,6 +80,7 @@
     .save-state{border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:6px 10px;background:rgba(21,128,83,.72);color:#fff}
     .header-action{border:0;border-radius:9px;min-height:40px;padding:8px 14px;background:#fff;color:#183247;font-weight:850;white-space:nowrap;box-shadow:0 2px 7px rgba(0,0,0,.16);display:inline-flex;align-items:center;justify-content:center}
     .header-action.excel{background:#e7aa18;color:#2f2507}.header-action input{display:none}
+    .version-badge{border:1px solid rgba(255,255,255,.28);border-radius:8px;padding:6px 9px;color:#dcecf2;background:rgba(7,25,38,.38);font-size:11px;font-weight:850;white-space:nowrap}
     .inspection-layout{max-width:1540px;margin:0 auto;display:grid;grid-template-columns:290px minmax(0,1fr);min-height:calc(100vh - 64px)}
     .inspection-sidebar{background:rgba(255,255,255,.84);border-right:1px solid #d1dde3;padding:22px 16px;height:calc(100vh - 64px);position:sticky;top:64px;overflow:auto;backdrop-filter:blur(10px)}
     .sidebar-label{font-size:11px;letter-spacing:.08em;color:#6c7c86;font-weight:850;margin:0 8px 10px}
@@ -109,7 +110,7 @@
       .inspection-layout{grid-template-columns:235px minmax(0,1fr)}.inspection-sidebar{padding:18px 10px}.inspection-main{padding:20px 16px 60px}.overview-form{grid-template-columns:repeat(2,minmax(0,1fr))}.header-chip{display:none}.header-action{padding:8px 10px}.brand h1{font-size:16px}
     }
     @media(max-width:720px){
-      body{padding-bottom:env(safe-area-inset-bottom)}.app-header{padding:calc(10px + env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) 9px max(10px,env(safe-area-inset-left));position:sticky}.header-row{display:block}.brand{margin-bottom:8px}.brand h1{font-size:16px}.header-tools{justify-content:flex-start;overflow-x:auto;padding-bottom:3px;scrollbar-width:none}.header-tools::-webkit-scrollbar{display:none}.header-action{min-height:42px;padding:8px 13px}.save-state{display:inline-flex;align-items:center;min-height:34px}
+      body{padding-bottom:env(safe-area-inset-bottom)}.app-header{padding:calc(10px + env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) 9px max(10px,env(safe-area-inset-left));position:sticky}.header-row{display:block}.brand{margin-bottom:8px;padding-right:54px}.brand h1{font-size:16px}.header-tools{justify-content:flex-start;overflow-x:auto;padding-bottom:3px;scrollbar-width:none}.header-tools::-webkit-scrollbar{display:none}.header-action{min-height:42px;padding:8px 13px}.save-state{display:inline-flex;align-items:center;min-height:34px}.version-badge{position:absolute;right:max(10px,env(safe-area-inset-right));top:calc(10px + env(safe-area-inset-top))}
       .inspection-layout{display:block;min-height:0}.inspection-sidebar{position:sticky;top:104px;height:auto;z-index:15;border-right:0;border-bottom:1px solid #ccd9df;padding:10px;background:rgba(247,250,251,.96);overflow:hidden}.sidebar-label,.nav-divider{display:none}.sidebar-facility{grid-template-columns:minmax(0,1fr) auto;margin-bottom:8px}.inspection-nav{display:flex;align-items:center;gap:7px;overflow-x:auto;scrollbar-width:none}.inspection-nav::-webkit-scrollbar,.zone-nav-scroll::-webkit-scrollbar{display:none}.nav-overview,.zone-nav-item{width:auto;min-width:max-content;min-height:42px;padding:9px 12px;background:#edf2f4}.zone-nav-scroll{display:flex;gap:7px}.mobile-zone-title{display:block;min-width:max-content;font-size:11px;color:#647681;font-weight:800;padding:12px 2px 0}.inspection-main{padding:12px max(10px,env(safe-area-inset-right)) 50px max(10px,env(safe-area-inset-left))}.facility-hero{border-radius:13px;padding:17px;align-items:flex-start}.facility-hero h2{font-size:21px}.facility-hero p{font-size:12px}.hero-actions .btn{padding:8px 10px;font-size:12px}.workspace-card{padding:15px;border-radius:13px}.overview-form,.ui-progress-grid,.detail-setting,.detail-bottom{grid-template-columns:1fr}.ui-progress-grid{grid-template-columns:1fr 1fr}.detail-photos{grid-template-columns:1fr}.detail-upload{grid-column:auto}
       input,select,textarea{font-size:16px;min-height:44px}.ui-table-wrap.ui-responsive{overflow:visible;border:0}.ui-responsive table,.ui-responsive tbody,.ui-responsive tr,.ui-responsive td{display:block;width:100%}.ui-responsive table{min-width:0}.ui-responsive thead{display:none}.ui-responsive tr{border:1px solid #d5dfe3;border-radius:12px;margin-bottom:11px;padding:8px 11px;background:#fff;box-shadow:0 3px 12px rgba(25,55,68,.05)}.ui-responsive td{border:0;min-height:45px;height:auto;padding:7px 0;display:grid;grid-template-columns:42% 58%;align-items:center;white-space:normal}.ui-responsive td::before{content:attr(data-label);font-size:11px;color:#667984;font-weight:800}.ui-responsive td input{width:100%;min-width:0}.detail-photo img{height:190px}
     }
@@ -129,6 +130,7 @@
         <label class="header-action">復元<input id="top-import-json" type="file" accept="application/json,.json"></label>
         <button id="top-export-excel" class="header-action excel">Excel出力</button>
         <button id="top-print-report" class="header-action">印刷</button>
+        <span class="version-badge">Ver. 1</span>
       </div>
     </div>
   </header>
@@ -196,14 +198,13 @@
         <div class="grid grid-4">
           <label>施設名<input data-facility="name" placeholder="例：第1岸壁"></label>
           <label>施設延長（m）<input data-facility="length" type="number" min="0.1" step="0.1"></label>
-          <label>スパン延長（m）<input data-facility="spanLength" type="number" min="0.1" step="0.1"></label>
           <label>測点間隔（m）<input data-facility="pointInterval" type="number" min="0.1" step="0.1"></label>
           <label>再現性許容差（cm）<input data-facility="tolerance" type="number" min="0" step="0.1"></label>
           <label>変位評価基準（cm・絶対値）<input data-facility="threshold" type="number" min="0" step="0.1"></label>
           <label>海側の符号<input value="プラス（＋）" disabled></label>
           <label>区画最大長<input value="10 m（均等分割）" disabled></label>
         </div>
-        <div class="notice">施設延長を10m以下の同じ長さに均等分割します。測点は各スパンの起点から間隔をリセットし、施設起点・終点を必ず含めます。重複位置は1測点に統合します。</div>
+        <div class="notice">測点間隔の設定から測点とスパンを一括生成します。施設起点・終点を必ず測点に含め、重複位置は1測点に統合します。</div>
         <div class="actions"><button id="apply-settings" class="btn">設定を反映して再生成</button><span class="footnote">既存測点と同じ距離の計測値は引き継ぎます。なくなる測点の値は削除されます。</span></div>
       </div>
       <div class="card"><h2>生成結果</h2><div id="generation-preview"></div></div>
@@ -267,7 +268,7 @@
     const fmt=(v,d=1)=>Number(v).toLocaleString('ja-JP',{minimumFractionDigits:d,maximumFractionDigits:d});
     const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,9);
     const today=()=>new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Tokyo'});
-    const defaultFacility=(name='施設1')=>({id:uid(),name,length:100,spanLength:20,pointInterval:10,tolerance:50,threshold:20,weather:'',tide:'',method:'',notes:'',spans:[],zones:[],points:[]});
+    const defaultFacility=(name='施設1')=>({id:uid(),name,length:100,spanLength:10,pointInterval:10,tolerance:50,threshold:20,weather:'',tide:'',method:'',notes:'',spans:[],zones:[],points:[]});
     let state={version:APP_VERSION,name:'',inspectionDate:today(),inspector:'',activeFacilityId:'',facilities:[]};
     let uiView='overview',uiZoneId='';
     let saveTimer=null,toastTimer=null,db=null;
@@ -276,7 +277,7 @@
     function activeFacility(){return state.facilities.find(f=>f.id===state.activeFacilityId)||state.facilities[0]}
     function round(v,d=4){const p=10**d;return Math.round((v+Number.EPSILON)*p)/p}
     function generate(f,preserve=true){
-      const L=Math.max(.1,n(f.length)), spanL=Math.max(.1,n(f.spanLength)), interval=Math.max(.1,n(f.pointInterval));
+      const L=Math.max(.1,n(f.length)), interval=Math.max(.1,n(f.pointInterval)), spanL=interval;f.spanLength=interval;
       const old=new Map((f.points||[]).map(p=>[round(p.distance,3),p]));
       const oldZones=f.zones||[];
       const zoneCount=Math.max(1,Math.ceil(L/10));
@@ -304,7 +305,7 @@
       catch(e){try{const raw=localStorage.getItem(DB_NAME);if(raw)state=migrate(JSON.parse(raw));else initState()}catch(_){initState()}toast('保存領域を簡易モードで使用します')}
       renderAll();setSaveState('保存済み');
     }
-    function migrate(data){const x={...data,version:APP_VERSION};x.facilities=(x.facilities||[]).map((f,i)=>({...defaultFacility(`施設${i+1}`),...f}));if(!x.activeFacilityId||!x.facilities.some(f=>f.id===x.activeFacilityId))x.activeFacilityId=x.facilities[0]?.id||'';x.facilities.forEach(f=>{if(!f.zones?.length||!f.points?.length)generate(f,true)});return x}
+    function migrate(data){const x={...data,version:APP_VERSION};x.facilities=(x.facilities||[]).map((f,i)=>({...defaultFacility(`施設${i+1}`),...f}));if(!x.activeFacilityId||!x.facilities.some(f=>f.id===x.activeFacilityId))x.activeFacilityId=x.facilities[0]?.id||'';x.facilities.forEach(f=>{f.spanLength=n(f.pointInterval)||10;generate(f,true)});return x}
     function scheduleSave(){setSaveState('保存中…',true);clearTimeout(saveTimer);saveTimer=setTimeout(saveNow,500)}
     async function saveNow(){state.version=APP_VERSION;try{if(db)await new Promise((resolve,reject)=>{const q=db.transaction(STORE,'readwrite').objectStore(STORE).put(state,KEY);q.onsuccess=()=>resolve();q.onerror=()=>reject(q.error)});else localStorage.setItem(DB_NAME,JSON.stringify(state));setSaveState('保存済み')}catch(e){setSaveState('保存失敗',false,true);toast('自動保存に失敗しました。写真を減らすかJSONを出力してください。',5000)}}
     function setSaveState(text,saving=false,error=false){const el=$('#save-state');el.innerHTML=`<span class="save-dot" style="background:${error?'#fb7185':saving?'#fbbf24':'#6ee7b7'}"></span>${esc(text)}${!saving&&!error?'・'+new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'}):''}`}
@@ -356,7 +357,6 @@
           <label>施設延長（m）<input data-ui-facility="length" type="number" min="0.1" step="0.1" value="${esc(f.length)}"></label>
           <label>点検日<input data-ui-project="inspectionDate" type="date" value="${esc(state.inspectionDate)}"></label>
           <label>点検者<input data-ui-project="inspector" value="${esc(state.inspector)}" placeholder="氏名"></label>
-          <label>スパン延長（m）<input data-ui-facility="spanLength" type="number" min="0.1" step="0.1" value="${esc(f.spanLength)}"></label>
           <label>測点間隔（m）<input data-ui-facility="pointInterval" type="number" min="0.1" step="0.1" value="${esc(f.pointInterval)}"></label>
           <label>変位評価基準（cm・絶対値）<input data-ui-facility="threshold" type="number" min="0" step="0.1" value="${esc(f.threshold)}"></label>
           <label>再現性許容差（cm）<input data-ui-facility="tolerance" type="number" min="0" step="0.1" value="${esc(f.tolerance)}"></label>
@@ -364,7 +364,7 @@
           <label>潮位・海象<input data-ui-facility="tide" value="${esc(f.tide)}" placeholder="例：満潮前、波浪小"></label>
           <label>測定方法・機器<input data-ui-facility="method" value="${esc(f.method)}" placeholder="例：トータルステーション"></label>
         </div><label style="margin-top:13px">基準点・基準線、その他備考<textarea data-ui-facility="notes" rows="2">${esc(f.notes)}</textarea></label>
-        <div class="notice">施設延長を10m以下の同じ長さに均等分割します。測点はスパンごとに間隔をリセットし、施設起点・終点を含めます。</div>
+        <div class="notice">施設延長を10m以下の同じ長さに均等分割します。測点間隔の設定から測点とスパンを一括生成し、施設起点・終点を含めます。</div>
         ${n(f.tolerance)>n(f.threshold)?`<div class="notice danger">再現性許容差（${fmt(f.tolerance)}cm）が評価基準（${fmt(f.threshold)}cm）より大きい設定です。運用意図を確認してください。</div>`:''}</section>
         <section class="workspace-card"><h2>進捗</h2><div class="ui-progress-grid"><div class="ui-progress-card"><div class="value">${f.points.length}</div><div class="label">全測点</div></div><div class="ui-progress-card"><div class="value">${below}</div><div class="label">基準未満</div></div><div class="ui-progress-card"><div class="value">${flagged}</div><div class="label">抽出・利用保留区画</div></div><div class="ui-progress-card"><div class="value">${remeasure}</div><div class="label">要再計測</div></div></div><div style="margin-top:14px"><div class="progress"><span style="width:${f.points.length?Math.round(measured/f.points.length*100):0}%"></span></div><div class="footnote" style="margin-top:5px">入力済み ${measured} / ${f.points.length}測点</div></div></section>
         <section class="workspace-card"><div class="section-head"><h2>区画一覧</h2><div class="actions"><button class="btn secondary small" data-ui-add-facility>施設追加</button><button class="btn danger small" data-ui-delete-facility>施設削除</button></div></div><div class="ui-table-wrap"><table><thead><tr><th>区画</th><th>範囲</th><th>延長</th><th>測点</th><th>判定</th><th>写真</th></tr></thead><tbody>${f.zones.map(z=>{const zr=zoneResult(z,f),ps=f.points.filter(p=>p.zoneId===z.id);return`<tr><td><button class="zone-link" data-ui-zone="${z.id}">区画 ${String(z.number).padStart(2,'0')}</button></td><td>${fmt(z.start)}–${fmt(z.end)}m</td><td>${fmt(z.end-z.start)}m</td><td>${ps.length}点</td><td><span class="badge ${zr.cls}">${zr.status}</span></td><td>${z.photos.length?z.photos.length+'枚':'—'}</td></tr>`}).join('')}</tbody></table></div></section>
@@ -389,7 +389,7 @@
       $('#facility-select').addEventListener('change',e=>{state.activeFacilityId=e.target.value;renderAll();scheduleSave()});
       $('#add-facility').addEventListener('click',()=>{const f=defaultFacility(`施設${state.facilities.length+1}`);generate(f,false);state.facilities.push(f);state.activeFacilityId=f.id;renderAll();scheduleSave();toast('施設を追加しました')});
       $$('[data-facility]').forEach(el=>el.addEventListener('input',()=>{const f=activeFacility();f[el.dataset.facility]=el.type==='number'?n(el.value):el.value;if(el.dataset.facility==='name')renderFacilityPicker();scheduleSave()}));
-      $('#apply-settings').addEventListener('click',()=>{const f=activeFacility();if(n(f.length)<=0||n(f.spanLength)<=0||n(f.pointInterval)<=0){toast('施設延長・スパン延長・測点間隔は0より大きい値にしてください');return}const old=f.points.length;generate(f,true);renderAll();scheduleSave();toast(`再生成しました（${old}点 → ${f.points.length}点）`)});
+      $('#apply-settings').addEventListener('click',()=>{const f=activeFacility();if(n(f.length)<=0||n(f.pointInterval)<=0){toast('施設延長・測点間隔は0より大きい値にしてください');return}const old=f.points.length;generate(f,true);renderAll();scheduleSave();toast(`再生成しました（${old}点 → ${f.points.length}点）`)});
       $('#delete-facility').addEventListener('click',()=>{if(state.facilities.length===1){toast('施設は最低1件必要です');return}const f=activeFacility();if(!confirm(`「${f.name}」と、その計測値・写真を削除しますか？`))return;state.facilities=state.facilities.filter(x=>x.id!==f.id);state.activeFacilityId=state.facilities[0].id;renderAll();scheduleSave();toast('施設を削除しました')});
       $('#measurement-table').addEventListener('input',e=>{const field=e.target.dataset.pfield;if(!field)return;const tr=e.target.closest('[data-point]'),f=activeFacility(),p=f.points.find(p=>p.id===tr.dataset.point);p[field]=field==='notes'?e.target.value:e.target.value;refreshPointRow(tr,p,f);renderOverview();scheduleSave()});
       $('#clear-measurements').addEventListener('click',()=>{const f=activeFacility();if(!confirm(`「${f.name}」の全測点の計測値を消去しますか？`))return;f.points.forEach(p=>{p.m1='';p.m2=''});renderMeasurements();renderOverview();renderZones();scheduleSave();toast('計測値を消去しました')});
@@ -454,7 +454,7 @@
     function rowsFrom(values,header=true){return values.map((r,ri)=>({cells:r.map(v=>({v,s:header&&ri===0?1:0}))}))}
     async function exportExcel(){
       try{toast('Excelを作成しています…',6000);const f=activeFacility(),files=[];
-        const overview=[['岸壁法線変位 点検結果',''],['案件名',state.name],['施設名',f.name],['点検日',state.inspectionDate],['点検者',state.inspector],['施設延長（m）',n(f.length)],['スパン延長（m）',n(f.spanLength)],['測点間隔（m）',n(f.pointInterval)],['再現性許容差（cm）',n(f.tolerance)],['変位評価基準（cm・絶対値）',n(f.threshold)],['天候',f.weather],['潮位・海象',f.tide],['測定方法・機器',f.method],['備考',f.notes],['注意','基準該当は抽出・利用保留を示し、利用可能を保証するものではありません。']];
+        const overview=[['岸壁法線変位 点検結果',''],['アプリバージョン',APP_VERSION],['案件名',state.name],['施設名',f.name],['点検日',state.inspectionDate],['点検者',state.inspector],['施設延長（m）',n(f.length)],['測点間隔（m）',n(f.pointInterval)],['再現性許容差（cm）',n(f.tolerance)],['変位評価基準（cm・絶対値）',n(f.threshold)],['天候',f.weather],['潮位・海象',f.tide],['測定方法・機器',f.method],['備考',f.notes],['注意','基準該当は抽出・利用保留を示し、利用可能を保証するものではありません。']];
         const pointRows=[['測点','距離(m)','スパン','区画','1回目(cm)','2回目(cm)','計測差(cm)','代表値(cm)','判定','備考'],...f.points.map(p=>{const r=resultFor(p,f),z=f.zones.find(z=>z.id===p.zoneId);return[`P${p.number}`,n(p.distance),`S${p.spanNumber}`,`区画${z?.number||''}`,p.m1===''?'':n(p.m1),p.m2===''?'':n(p.m2),r.diff===null?'':r.diff,r.rep===null?'':r.rep,r.status,p.notes]})];
         const zoneRows=[['区画','開始(m)','終了(m)','所属測点','判定','写真枚数','区画所見'],...f.zones.map(z=>[`区画${z.number}`,z.start,z.end,f.points.filter(p=>p.zoneId===z.id).map(p=>'P'+p.number).join('、'),zoneResult(z,f).status,z.photos.length,z.notes])];
         const photos=f.zones.flatMap(z=>z.photos.map(ph=>({z,ph}))),photoRows=[{cells:[{v:'区画'},{v:'範囲'},{v:'撮影方向'},{v:'説明'},{v:'写真',s:1}],height:24}];photos.forEach(({z,ph},i)=>photoRows.push({cells:[{v:`区画${z.number}`},{v:`${fmt(z.start)}m～${fmt(z.end)}m`},{v:ph.direction},{v:ph.caption},{v:''}],height:120}));
