@@ -68,9 +68,53 @@
     #toast{position:fixed;right:18px;bottom:18px;z-index:100;background:#19384d;color:white;border-radius:10px;padding:11px 15px;box-shadow:0 8px 25px rgba(0,0,0,.22);opacity:0;transform:translateY(12px);pointer-events:none;transition:.22s;max-width:360px;font-size:13px}#toast.show{opacity:1;transform:none}
     #print-area{display:none}
     @media(max-width:850px){.app-header{position:static}.topbar{grid-template-columns:1fr}.project-fields{grid-template-columns:1fr 1fr}.project-fields label:first-child{grid-column:1/-1}.facility-picker{justify-content:stretch}.facility-picker label{flex:1}.summary-grid,.grid-4{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:1fr 1fr}}
-    @media(max-width:560px){.shell{padding:14px 10px 45px}.app-header{padding:14px}.subtitle,.save-state{display:none}.brand-mark{width:36px;height:36px}.card{padding:15px}.project-fields,.grid-2,.grid-3,.grid-4,.summary-grid{grid-template-columns:1fr}.facility-picker{flex-wrap:wrap}.facility-picker label{min-width:100%}.section-head{align-items:flex-start;flex-direction:column}.metric .v{font-size:23px}}
+    @media(max-width:560px){.shell{padding:14px 10px 45px}.app-header{padding:14px}.subtitle{display:none}.brand-mark{width:36px;height:36px}.card{padding:15px}.project-fields,.grid-2,.grid-3,.grid-4,.summary-grid{grid-template-columns:1fr}.facility-picker{flex-wrap:wrap}.facility-picker label{min-width:100%}.section-head{align-items:flex-start;flex-direction:column}.metric .v{font-size:23px}}
+
+    /* 参照画面を基調とした点検ワークスペース */
+    .legacy-shell{display:none!important}
+    .app-header{padding:12px 20px;background:linear-gradient(105deg,#102a43 0%,#0b4258 58%,#123047 100%);position:sticky;top:0}
+    .header-row{max-width:1540px;margin:0 auto}
+    .brand-mark{display:none}.brand h1{font-size:18px}.brand .subtitle{display:none}
+    .header-tools{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0}
+    .header-chip{border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:6px 10px;background:rgba(20,125,148,.55);font-size:11px;font-weight:800;white-space:nowrap}
+    .save-state{border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:6px 10px;background:rgba(21,128,83,.72);color:#fff}
+    .header-action{border:0;border-radius:9px;min-height:40px;padding:8px 14px;background:#fff;color:#183247;font-weight:850;white-space:nowrap;box-shadow:0 2px 7px rgba(0,0,0,.16);display:inline-flex;align-items:center;justify-content:center}
+    .header-action.excel{background:#e7aa18;color:#2f2507}.header-action input{display:none}
+    .inspection-layout{max-width:1540px;margin:0 auto;display:grid;grid-template-columns:290px minmax(0,1fr);min-height:calc(100vh - 64px)}
+    .inspection-sidebar{background:rgba(255,255,255,.84);border-right:1px solid #d1dde3;padding:22px 16px;height:calc(100vh - 64px);position:sticky;top:64px;overflow:auto;backdrop-filter:blur(10px)}
+    .sidebar-label{font-size:11px;letter-spacing:.08em;color:#6c7c86;font-weight:850;margin:0 8px 10px}
+    .sidebar-facility{display:grid;grid-template-columns:1fr auto;gap:7px;margin-bottom:18px}.sidebar-facility select{margin:0;font-size:13px}.sidebar-facility .btn{padding:8px 10px}
+    .inspection-nav{display:grid;gap:5px}.nav-overview,.zone-nav-item{width:100%;border:0;border-radius:10px;background:transparent;text-align:left;color:#273d4a;padding:10px 12px;font-weight:750;display:flex;align-items:center;gap:9px}
+    .nav-overview:hover,.zone-nav-item:hover{background:#edf4f6}.nav-overview.active,.zone-nav-item.active{background:linear-gradient(90deg,#dceeed,#e5edf1);color:#123b4d}
+    .nav-dot{width:9px;height:9px;border-radius:50%;background:#8c9aa2;flex:0 0 auto}.nav-dot.ok{background:var(--ok)}.nav-dot.warn{background:#dd8a12}.nav-dot.danger{background:var(--danger)}
+    .nav-divider{height:1px;background:#dce4e8;margin:14px 7px}.zone-nav-scroll{display:grid;gap:3px}
+    .inspection-main{padding:26px 28px 70px;min-width:0;background:radial-gradient(circle at 78% 5%,rgba(105,199,196,.13),transparent 30%),#edf2f3}
+    .inspection-main-inner{max-width:1180px;margin:0 auto}
+    .facility-hero{background:linear-gradient(110deg,#23313c,#00566a 75%,#006377);border-radius:16px;color:#fff;padding:23px 25px;margin-bottom:18px;box-shadow:0 8px 26px rgba(10,55,71,.15);display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .facility-hero h2{margin:0;font-size:25px;line-height:1.25}.facility-hero p{margin:5px 0 0;color:#d2e7eb;font-size:13px}.hero-kicker{font-size:13px;color:#c6dfe5;margin-bottom:3px}.hero-actions{flex:0 0 auto}.hero-actions .btn{background:#fff;color:#17394a}
+    .workspace-card{background:rgba(255,255,255,.9);border:1px solid #ccd8de;border-radius:15px;padding:19px;margin-bottom:16px;box-shadow:0 5px 20px rgba(29,57,70,.06)}
+    .workspace-card h2{font-size:17px;margin:0 0 15px;color:#243844}.workspace-card h3{margin:0 0 10px;color:#243844}
+    .overview-form{grid-template-columns:repeat(4,minmax(0,1fr))}.overview-form label{font-size:11px}.overview-form input,.overview-form select{min-height:46px;background:#fbfcfc}
+    .ui-progress-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.ui-progress-card{border:1px solid #d9e2e6;background:linear-gradient(135deg,#f9fbfc,#eef4f5);border-radius:13px;padding:15px}.ui-progress-card .value{font-size:26px;font-weight:900;color:#172f43}.ui-progress-card .label{font-size:11px;color:#637580}
+    .ui-table-wrap{overflow:auto;border:1px solid #d5dfe3;border-radius:12px}.ui-table-wrap table{min-width:680px}.ui-table-wrap th{position:static;background:#e7eef0;color:#394f5c}.ui-table-wrap td{height:57px}
+    .zone-link{border:0;border-radius:9px;background:#e7eef0;color:#173748;padding:8px 12px;font-weight:850}.zone-link:hover{background:#d6e7e9}
+    .detail-setting{display:grid;grid-template-columns:repeat(3,minmax(0,240px));gap:13px}.detail-setting input{background:#f7f9fa}
+    .ui-measure-table input{margin:0;min-width:90px;text-align:right;background:#fff5bc;border-color:#d7c77c;font-size:16px}.ui-measure-table td{height:66px}
+    .detail-bottom{display:grid;grid-template-columns:1fr 1fr;gap:16px}.detail-bottom .workspace-card{margin:0;min-width:0}
+    .detail-photos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.detail-photo{border:1px solid #d4dfe3;border-radius:10px;overflow:hidden;background:#f6f9fa}.detail-photo img{display:block;width:100%;height:150px;object-fit:cover}.detail-photo-fields{padding:8px}.detail-photo-fields input,.detail-photo-fields select{padding:7px;margin-top:3px;font-size:12px}.detail-photo .actions{justify-content:flex-end;margin-top:5px}
+    .detail-upload{min-height:205px;grid-column:1/-1}.detail-notes{min-height:205px;resize:vertical;font-size:16px}
+    .mobile-zone-title{display:none}
+
+    @media(max-width:980px){
+      .inspection-layout{grid-template-columns:235px minmax(0,1fr)}.inspection-sidebar{padding:18px 10px}.inspection-main{padding:20px 16px 60px}.overview-form{grid-template-columns:repeat(2,minmax(0,1fr))}.header-chip{display:none}.header-action{padding:8px 10px}.brand h1{font-size:16px}
+    }
+    @media(max-width:720px){
+      body{padding-bottom:env(safe-area-inset-bottom)}.app-header{padding:calc(10px + env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) 9px max(10px,env(safe-area-inset-left));position:sticky}.header-row{display:block}.brand{margin-bottom:8px}.brand h1{font-size:16px}.header-tools{justify-content:flex-start;overflow-x:auto;padding-bottom:3px;scrollbar-width:none}.header-tools::-webkit-scrollbar{display:none}.header-action{min-height:42px;padding:8px 13px}.save-state{display:inline-flex;align-items:center;min-height:34px}
+      .inspection-layout{display:block;min-height:0}.inspection-sidebar{position:sticky;top:104px;height:auto;z-index:15;border-right:0;border-bottom:1px solid #ccd9df;padding:10px;background:rgba(247,250,251,.96);overflow:hidden}.sidebar-label,.nav-divider{display:none}.sidebar-facility{grid-template-columns:minmax(0,1fr) auto;margin-bottom:8px}.inspection-nav{display:flex;align-items:center;gap:7px;overflow-x:auto;scrollbar-width:none}.inspection-nav::-webkit-scrollbar,.zone-nav-scroll::-webkit-scrollbar{display:none}.nav-overview,.zone-nav-item{width:auto;min-width:max-content;min-height:42px;padding:9px 12px;background:#edf2f4}.zone-nav-scroll{display:flex;gap:7px}.mobile-zone-title{display:block;min-width:max-content;font-size:11px;color:#647681;font-weight:800;padding:12px 2px 0}.inspection-main{padding:12px max(10px,env(safe-area-inset-right)) 50px max(10px,env(safe-area-inset-left))}.facility-hero{border-radius:13px;padding:17px;align-items:flex-start}.facility-hero h2{font-size:21px}.facility-hero p{font-size:12px}.hero-actions .btn{padding:8px 10px;font-size:12px}.workspace-card{padding:15px;border-radius:13px}.overview-form,.ui-progress-grid,.detail-setting,.detail-bottom{grid-template-columns:1fr}.ui-progress-grid{grid-template-columns:1fr 1fr}.detail-photos{grid-template-columns:1fr}.detail-upload{grid-column:auto}
+      input,select,textarea{font-size:16px;min-height:44px}.ui-table-wrap.ui-responsive{overflow:visible;border:0}.ui-responsive table,.ui-responsive tbody,.ui-responsive tr,.ui-responsive td{display:block;width:100%}.ui-responsive table{min-width:0}.ui-responsive thead{display:none}.ui-responsive tr{border:1px solid #d5dfe3;border-radius:12px;margin-bottom:11px;padding:8px 11px;background:#fff;box-shadow:0 3px 12px rgba(25,55,68,.05)}.ui-responsive td{border:0;min-height:45px;height:auto;padding:7px 0;display:grid;grid-template-columns:42% 58%;align-items:center;white-space:normal}.ui-responsive td::before{content:attr(data-label);font-size:11px;color:#667984;font-weight:800}.ui-responsive td input{width:100%;min-width:0}.detail-photo img{height:190px}
+    }
     @media print{
-      @page{size:A4 landscape;margin:10mm}body{background:#fff;color:#000;font-size:9pt}.app-header,.shell,#toast{display:none!important}#print-area{display:block!important}.print-page{page-break-after:always}.print-page:last-child{page-break-after:auto}.print-title{border-bottom:2px solid #123047;padding-bottom:5mm;margin-bottom:5mm}.print-title h1{font-size:18pt}.print-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3mm;margin-bottom:5mm}.print-box{border:1px solid #aaa;padding:3mm}.print-table{width:100%;font-size:8pt}.print-table th,.print-table td{padding:1.8mm;border:1px solid #aaa;white-space:normal}.print-photos{display:grid;grid-template-columns:1fr 1fr;gap:5mm}.print-photo{break-inside:avoid;border:1px solid #aaa;padding:3mm}.print-photo img{width:100%;height:70mm;object-fit:contain}.print-note{font-size:8pt;margin-top:4mm}
+      @page{size:A4 landscape;margin:10mm}body{background:#fff;color:#000;font-size:9pt}.app-header,.shell,.inspection-layout,#toast{display:none!important}#print-area{display:block!important}.print-page{page-break-after:always}.print-page:last-child{page-break-after:auto}.print-title{border-bottom:2px solid #123047;padding-bottom:5mm;margin-bottom:5mm}.print-title h1{font-size:18pt}.print-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3mm;margin-bottom:5mm}.print-box{border:1px solid #aaa;padding:3mm}.print-table{width:100%;font-size:8pt}.print-table th,.print-table td{padding:1.8mm;border:1px solid #aaa;white-space:normal}.print-photos{display:grid;grid-template-columns:1fr 1fr;gap:5mm}.print-photo{break-inside:avoid;border:1px solid #aaa;padding:3mm}.print-photo img{width:100%;height:70mm;object-fit:contain}.print-note{font-size:8pt;margin-top:4mm}
     }
   </style>
 </head>
@@ -78,11 +122,28 @@
   <header class="app-header">
     <div class="header-row">
       <div class="brand"><div class="brand-mark">岸変</div><div><h1>岸壁法線変位 ローカル点検アプリ</h1><div class="subtitle">端末内保存・オフライン運用</div></div></div>
-      <div id="save-state" class="save-state"><span class="save-dot"></span>読込中</div>
+      <div class="header-tools">
+        <span class="header-chip">端末内のみ</span>
+        <div id="save-state" class="save-state"><span class="save-dot"></span>読込中</div>
+        <button id="top-export-json" class="header-action">保存（JSON）</button>
+        <label class="header-action">復元<input id="top-import-json" type="file" accept="application/json,.json"></label>
+        <button id="top-export-excel" class="header-action excel">Excel出力</button>
+        <button id="top-print-report" class="header-action">印刷</button>
+      </div>
     </div>
   </header>
 
-  <main class="shell">
+  <main id="inspection-layout" class="inspection-layout">
+    <aside class="inspection-sidebar">
+      <p class="sidebar-label">ナビゲーション</p>
+      <div id="inspection-nav"></div>
+    </aside>
+    <section class="inspection-main">
+      <div id="inspection-view" class="inspection-main-inner"></div>
+    </section>
+  </main>
+
+  <main class="shell legacy-shell" aria-hidden="true">
     <section class="topbar">
       <div class="project-fields">
         <label>案件名<input id="project-name" data-project="name" placeholder="例：令和○年 ○○港緊急点検"></label>
@@ -208,6 +269,7 @@
     const today=()=>new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Tokyo'});
     const defaultFacility=(name='施設1')=>({id:uid(),name,length:100,spanLength:20,pointInterval:10,tolerance:50,threshold:20,weather:'',tide:'',method:'',notes:'',spans:[],zones:[],points:[]});
     let state={version:APP_VERSION,name:'',inspectionDate:today(),inspector:'',activeFacilityId:'',facilities:[]};
+    let uiView='overview',uiZoneId='';
     let saveTimer=null,toastTimer=null,db=null;
 
     function initState(){const f=defaultFacility();generate(f,false);state.facilities=[f];state.activeFacilityId=f.id}
@@ -248,7 +310,7 @@
     function setSaveState(text,saving=false,error=false){const el=$('#save-state');el.innerHTML=`<span class="save-dot" style="background:${error?'#fb7185':saving?'#fbbf24':'#6ee7b7'}"></span>${esc(text)}${!saving&&!error?'・'+new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'}):''}`}
     function toast(msg,ms=2600){const el=$('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),ms)}
 
-    function renderAll(){renderProject();renderFacilityPicker();renderFacilityInputs();renderOverview();renderPreview();renderMeasurements();renderZones()}
+    function renderAll(){renderProject();renderFacilityPicker();renderFacilityInputs();renderOverview();renderPreview();renderMeasurements();renderZones();renderInspectionUI()}
     function renderProject(){$$('[data-project]').forEach(el=>el.value=state[el.dataset.project]??'')}
     function renderFacilityPicker(){const s=$('#facility-select');s.innerHTML=state.facilities.map(f=>`<option value="${f.id}">${esc(f.name)}</option>`).join('');s.value=state.activeFacilityId}
     function renderFacilityInputs(){const f=activeFacility();if(!f)return;$$('[data-facility]').forEach(el=>el.value=f[el.dataset.facility]??'')}
@@ -272,6 +334,55 @@
       const f=activeFacility();if(!f)return;const host=$('#zone-list');host.innerHTML=f.zones.map(z=>{const zr=zoneResult(z,f),ps=f.points.filter(p=>p.zoneId===z.id),photos=z.photos||[];return`<article class="zone-card" data-zone="${z.id}"><div class="zone-head"><div><span class="zone-title">区画${z.number}</span> <span class="footnote">${fmt(z.start)}m ～ ${fmt(z.end)}m</span></div><span class="badge ${zr.cls}">${zr.status}</span></div><div class="zone-body"><div class="zone-stats"><span>所属測点：${ps.map(p=>'P'+p.number).join('、')||'なし'}</span><span>写真：${photos.length}/5枚</span></div><label>区画所見<textarea data-zone-notes rows="2" placeholder="損傷、周辺状況、確認事項など">${esc(z.notes)}</textarea></label><div class="photo-grid" style="margin-top:10px">${photos.map(ph=>`<div class="photo" data-photo="${ph.id}"><img src="${ph.data}" alt="区画${z.number} 現場写真"><div class="photo-meta"><label>撮影方向<select data-photo-field="direction">${['未設定','海側','陸側','起点側','終点側','その他'].map(x=>`<option ${ph.direction===x?'selected':''}>${x}</option>`).join('')}</select></label><label>説明<input data-photo-field="caption" value="${esc(ph.caption)}" placeholder="写真説明"></label><div class="actions"><button class="btn danger small" data-remove-photo>削除</button></div></div></div>`).join('')}<label class="upload ${photos.length>=5?'hidden':''}">写真を追加<br><span class="footnote">JPEG / PNG / HEIC等</span><input type="file" accept="image/*" multiple data-photo-input></label></div></div></article>`}).join('')||'<div class="empty"><strong>区画がありません</strong>施設設定を反映してください。</div>';
     }
 
+    function renderInspectionUI(){
+      const f=activeFacility();if(!f)return;
+      if(!f.zones.some(z=>z.id===uiZoneId))uiZoneId=f.zones[0]?.id||'';
+      const nav=$('#inspection-nav');
+      nav.innerHTML=`<div class="sidebar-facility"><select id="ui-facility-select" aria-label="対象施設">${state.facilities.map(fac=>`<option value="${fac.id}" ${fac.id===f.id?'selected':''}>${esc(fac.name)}</option>`).join('')}</select><button class="btn secondary small" data-ui-add-facility aria-label="施設追加">＋</button></div><nav class="inspection-nav"><button class="nav-overview ${uiView==='overview'?'active':''}" data-ui-view="overview"><span class="nav-dot ok"></span>全体一覧</button><span class="mobile-zone-title">区画</span><div class="nav-divider"></div><div class="zone-nav-scroll">${f.zones.map(z=>{const zr=zoneResult(z,f);return`<button class="zone-nav-item ${uiView==='zone'&&uiZoneId===z.id?'active':''}" data-ui-zone="${z.id}"><span class="nav-dot ${zr.cls}"></span>区画 ${String(z.number).padStart(2,'0')}｜${fmt(z.start,0)}–${fmt(z.end,0)}m</button>`}).join('')}</div></nav>`;
+      $('#inspection-view').innerHTML=uiView==='zone'?renderZoneWorkspace(f):renderOverviewWorkspace(f);
+    }
+
+    function renderOverviewWorkspace(f){
+      const results=f.points.map(p=>resultFor(p,f));
+      const measured=results.filter(r=>r.status!=='未計測').length;
+      const below=results.filter(r=>r.status==='基準未満').length;
+      const flagged=f.zones.filter(z=>zoneResult(z,f).status==='抽出・利用保留').length;
+      const remeasure=results.filter(r=>r.status==='要再計測').length;
+      const facilityTitle=f.name||'施設名称未入力';
+      return `<section class="facility-hero"><div><h2>${esc(facilityTitle)}</h2><p>${esc(state.name||'案件名未入力')}｜全長 ${fmt(f.length)}m｜${f.zones.length}区画・${f.points.length}測点</p></div><div class="hero-actions"><button class="btn" data-ui-apply>設定を反映</button></div></section>
+        <section class="workspace-card"><h2>基本情報・評価条件</h2><div class="grid overview-form">
+          <label>案件名<input data-ui-project="name" value="${esc(state.name)}" placeholder="案件名"></label>
+          <label>施設名称<input data-ui-facility="name" value="${esc(f.name)}" placeholder="施設名称"></label>
+          <label>施設延長（m）<input data-ui-facility="length" type="number" min="0.1" step="0.1" value="${esc(f.length)}"></label>
+          <label>点検日<input data-ui-project="inspectionDate" type="date" value="${esc(state.inspectionDate)}"></label>
+          <label>点検者<input data-ui-project="inspector" value="${esc(state.inspector)}" placeholder="氏名"></label>
+          <label>スパン延長（m）<input data-ui-facility="spanLength" type="number" min="0.1" step="0.1" value="${esc(f.spanLength)}"></label>
+          <label>測点間隔（m）<input data-ui-facility="pointInterval" type="number" min="0.1" step="0.1" value="${esc(f.pointInterval)}"></label>
+          <label>変位評価基準（cm・絶対値）<input data-ui-facility="threshold" type="number" min="0" step="0.1" value="${esc(f.threshold)}"></label>
+          <label>再現性許容差（cm）<input data-ui-facility="tolerance" type="number" min="0" step="0.1" value="${esc(f.tolerance)}"></label>
+          <label>天候<input data-ui-facility="weather" value="${esc(f.weather)}" placeholder="例：晴れ"></label>
+          <label>潮位・海象<input data-ui-facility="tide" value="${esc(f.tide)}" placeholder="例：満潮前、波浪小"></label>
+          <label>測定方法・機器<input data-ui-facility="method" value="${esc(f.method)}" placeholder="例：トータルステーション"></label>
+        </div><label style="margin-top:13px">基準点・基準線、その他備考<textarea data-ui-facility="notes" rows="2">${esc(f.notes)}</textarea></label>
+        <div class="notice">施設延長を10m以下の同じ長さに均等分割します。測点はスパンごとに間隔をリセットし、施設起点・終点を含めます。</div>
+        ${n(f.tolerance)>n(f.threshold)?`<div class="notice danger">再現性許容差（${fmt(f.tolerance)}cm）が評価基準（${fmt(f.threshold)}cm）より大きい設定です。運用意図を確認してください。</div>`:''}</section>
+        <section class="workspace-card"><h2>進捗</h2><div class="ui-progress-grid"><div class="ui-progress-card"><div class="value">${f.points.length}</div><div class="label">全測点</div></div><div class="ui-progress-card"><div class="value">${below}</div><div class="label">基準未満</div></div><div class="ui-progress-card"><div class="value">${flagged}</div><div class="label">抽出・利用保留区画</div></div><div class="ui-progress-card"><div class="value">${remeasure}</div><div class="label">要再計測</div></div></div><div style="margin-top:14px"><div class="progress"><span style="width:${f.points.length?Math.round(measured/f.points.length*100):0}%"></span></div><div class="footnote" style="margin-top:5px">入力済み ${measured} / ${f.points.length}測点</div></div></section>
+        <section class="workspace-card"><div class="section-head"><h2>区画一覧</h2><div class="actions"><button class="btn secondary small" data-ui-add-facility>施設追加</button><button class="btn danger small" data-ui-delete-facility>施設削除</button></div></div><div class="ui-table-wrap"><table><thead><tr><th>区画</th><th>範囲</th><th>延長</th><th>測点</th><th>判定</th><th>写真</th></tr></thead><tbody>${f.zones.map(z=>{const zr=zoneResult(z,f),ps=f.points.filter(p=>p.zoneId===z.id);return`<tr><td><button class="zone-link" data-ui-zone="${z.id}">区画 ${String(z.number).padStart(2,'0')}</button></td><td>${fmt(z.start)}–${fmt(z.end)}m</td><td>${fmt(z.end-z.start)}m</td><td>${ps.length}点</td><td><span class="badge ${zr.cls}">${zr.status}</span></td><td>${z.photos.length?z.photos.length+'枚':'—'}</td></tr>`}).join('')}</tbody></table></div></section>
+        <section class="workspace-card"><h2>運用上の注意</h2><p class="footnote">評価基準以上は「抽出・利用保留」であり、利用可能を保証しません。災害前データがない場合の一様な変位、水中部、洗掘、障害物、構造安全性は別途確認してください。点検後は必ずExcelまたはJSONを出力してください。</p></section>`;
+    }
+
+    function renderZoneWorkspace(f){
+      const z=f.zones.find(z=>z.id===uiZoneId)||f.zones[0];if(!z)return'<div class="empty">区画がありません</div>';
+      const zr=zoneResult(z,f),points=f.points.filter(p=>p.zoneId===z.id),photos=z.photos||[];
+      return `<section class="facility-hero"><div><div class="hero-kicker">区画 ${String(z.number).padStart(2,'0')}</div><h2>${fmt(z.start,0)}m – ${fmt(z.end,0)}m</h2><p>海側 ＋ ／ 陸側 －（cm）</p></div><span class="badge ${zr.cls}">${zr.status}</span></section>
+        <section class="workspace-card"><h2>区画設定</h2><div class="detail-setting"><label>開始位置（m）<input value="${fmt(z.start)}" readonly></label><label>終了位置（m）<input value="${fmt(z.end)}" readonly></label><label>延長（m）<input value="${fmt(z.end-z.start)}" readonly></label></div></section>
+        <section class="workspace-card"><div class="section-head"><div><h2>法線変位（2回計測）</h2><div class="footnote">災害前後の差をcmで入力</div></div><button class="btn danger small" data-ui-clear-zone>この区画の計測値を消去</button></div>
+          ${points.length?`<div class="ui-table-wrap ui-responsive"><table class="ui-measure-table"><thead><tr><th>測点</th><th>位置</th><th>D1</th><th>D2</th><th>差</th><th>判定</th><th>採用値</th></tr></thead><tbody>${points.map(p=>{const r=resultFor(p,f);return`<tr data-ui-point="${p.id}"><td data-label="測点"><strong>P${p.number}</strong></td><td data-label="位置">${fmt(p.distance)}m</td><td data-label="D1（cm）"><input type="number" inputmode="decimal" step="0.1" data-ui-pfield="m1" value="${esc(p.m1)}" aria-label="P${p.number} D1"></td><td data-label="D2（cm）"><input type="number" inputmode="decimal" step="0.1" data-ui-pfield="m2" value="${esc(p.m2)}" aria-label="P${p.number} D2"></td><td data-label="差" class="num">${r.diff===null?'—':fmt(r.diff)}</td><td data-label="判定"><span class="badge ${r.cls}">${r.status}</span></td><td data-label="採用値" class="num">${r.rep===null?'—':fmt(r.rep)}</td></tr>`}).join('')}</tbody></table></div>`:'<div class="empty"><strong>この区画に測点がありません</strong>全体一覧から設定を確認してください。</div>'}
+          <p class="footnote" style="margin:12px 0 0">D1・D2の差が${fmt(f.tolerance)}cmを超える場合は「要再計測」とし、3回目の計測は使用しません。採用値は絶対値が大きい方です。</p></section>
+        <div class="detail-bottom"><section class="workspace-card"><h2>現場写真</h2><div class="detail-photos">${photos.map(ph=>`<article class="detail-photo" data-ui-photo="${ph.id}"><img src="${ph.data}" alt="区画${z.number} 現場写真"><div class="detail-photo-fields"><label>撮影方向<select data-ui-photo-field="direction">${['未設定','海側','陸側','起点側','終点側','その他'].map(v=>`<option ${ph.direction===v?'selected':''}>${v}</option>`).join('')}</select></label><label>説明<input data-ui-photo-field="caption" value="${esc(ph.caption)}"></label><div class="actions"><button class="btn danger small" data-ui-remove-photo>削除</button></div></div></article>`).join('')}<label class="upload detail-upload ${photos.length>=5?'hidden':''}">${photos.length?'写真を追加':'写真未登録'}<br><span class="footnote">カメラ撮影または写真を選択（最大5枚）</span><input type="file" accept="image/*" capture="environment" multiple data-ui-photo-input></label></div></section>
+        <section class="workspace-card"><h2>備考</h2><textarea class="detail-notes" data-ui-zone-notes placeholder="異常箇所や現場状況を入力">${esc(z.notes)}</textarea></section></div>`;
+    }
+
     function bind(){
       $$('.tab').forEach(b=>b.addEventListener('click',()=>{$$('.tab').forEach(x=>x.classList.toggle('active',x===b));$$('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+b.dataset.tab));if(b.dataset.tab==='zones')renderZones();if(b.dataset.tab==='overview')renderOverview()}));
       $$('[data-project]').forEach(el=>el.addEventListener('input',()=>{state[el.dataset.project]=el.value;scheduleSave()}));
@@ -285,6 +396,31 @@
       $('#zone-list').addEventListener('input',e=>{const card=e.target.closest('[data-zone]');if(!card)return;const z=activeFacility().zones.find(z=>z.id===card.dataset.zone);if(e.target.matches('[data-zone-notes]'))z.notes=e.target.value;const phEl=e.target.closest('[data-photo]');if(phEl&&e.target.dataset.photoField){const ph=z.photos.find(p=>p.id===phEl.dataset.photo);ph[e.target.dataset.photoField]=e.target.value}scheduleSave()});
       $('#zone-list').addEventListener('change',async e=>{if(!e.target.matches('[data-photo-input]'))return;const card=e.target.closest('[data-zone]'),z=activeFacility().zones.find(z=>z.id===card.dataset.zone),files=[...e.target.files].slice(0,5-z.photos.length);if(!files.length)return;toast('写真を取り込んでいます…',5000);for(const file of files){try{const data=await resizeImage(file,1600);z.photos.push({id:uid(),data,caption:'',direction:'未設定',takenAt:new Date(file.lastModified||Date.now()).toISOString()})}catch(err){toast(`${file.name}を読み込めませんでした`,4000)}}renderZones();scheduleSave();toast(`${files.length}枚の写真を追加しました`)});
       $('#zone-list').addEventListener('click',e=>{const b=e.target.closest('[data-remove-photo]');if(!b)return;const card=b.closest('[data-zone]'),phEl=b.closest('[data-photo]'),z=activeFacility().zones.find(z=>z.id===card.dataset.zone);z.photos=z.photos.filter(p=>p.id!==phEl.dataset.photo);renderZones();scheduleSave()});
+      $('#inspection-layout').addEventListener('click',e=>{
+        const zoneButton=e.target.closest('[data-ui-zone]');if(zoneButton){uiZoneId=zoneButton.dataset.uiZone;uiView='zone';renderInspectionUI();window.scrollTo({top:0,behavior:'smooth'});return}
+        if(e.target.closest('[data-ui-view="overview"]')){uiView='overview';renderInspectionUI();window.scrollTo({top:0,behavior:'smooth'});return}
+        if(e.target.closest('[data-ui-add-facility]')){$('#add-facility').click();uiView='overview';return}
+        if(e.target.closest('[data-ui-delete-facility]')){$('#delete-facility').click();uiView='overview';return}
+        if(e.target.closest('[data-ui-apply]')){$('#apply-settings').click();uiView='overview';return}
+        if(e.target.closest('[data-ui-clear-zone]')){const f=activeFacility(),z=f.zones.find(z=>z.id===uiZoneId);if(!confirm(`区画${z.number}の計測値を消去しますか？`))return;f.points.filter(p=>p.zoneId===z.id).forEach(p=>{p.m1='';p.m2=''});renderAll();scheduleSave();toast('区画の計測値を消去しました');return}
+        const remove=e.target.closest('[data-ui-remove-photo]');if(remove){const photoEl=remove.closest('[data-ui-photo]'),z=activeFacility().zones.find(z=>z.id===uiZoneId);z.photos=z.photos.filter(ph=>ph.id!==photoEl.dataset.uiPhoto);renderInspectionUI();scheduleSave();toast('写真を削除しました')}
+      });
+      $('#inspection-layout').addEventListener('input',e=>{
+        if(e.target.dataset.uiProject){state[e.target.dataset.uiProject]=e.target.value;scheduleSave();return}
+        if(e.target.dataset.uiFacility){const f=activeFacility(),field=e.target.dataset.uiFacility;f[field]=e.target.type==='number'?n(e.target.value):e.target.value;scheduleSave();return}
+        if(e.target.dataset.uiPfield){const f=activeFacility(),row=e.target.closest('[data-ui-point]'),p=f.points.find(p=>p.id===row.dataset.uiPoint);p[e.target.dataset.uiPfield]=e.target.value;scheduleSave();return}
+        if(e.target.matches('[data-ui-zone-notes]')){const z=activeFacility().zones.find(z=>z.id===uiZoneId);z.notes=e.target.value;scheduleSave();return}
+        if(e.target.dataset.uiPhotoField){const z=activeFacility().zones.find(z=>z.id===uiZoneId),photoEl=e.target.closest('[data-ui-photo]'),ph=z.photos.find(ph=>ph.id===photoEl.dataset.uiPhoto);ph[e.target.dataset.uiPhotoField]=e.target.value;scheduleSave()}
+      });
+      $('#inspection-layout').addEventListener('change',async e=>{
+        if(e.target.id==='ui-facility-select'){state.activeFacilityId=e.target.value;uiView='overview';uiZoneId='';renderAll();scheduleSave();return}
+        if(e.target.matches('[data-ui-photo-input]')){const z=activeFacility().zones.find(z=>z.id===uiZoneId),files=[...e.target.files].slice(0,5-z.photos.length);if(!files.length)return;toast('写真を取り込んでいます…',5000);for(const file of files){try{const data=await resizeImage(file,1600);z.photos.push({id:uid(),data,caption:'',direction:'未設定',takenAt:new Date(file.lastModified||Date.now()).toISOString()})}catch(err){toast(`${file.name}を読み込めませんでした`,4000)}}renderInspectionUI();scheduleSave();toast(`${files.length}枚の写真を追加しました`);return}
+        if(e.target.matches('[data-ui-project],[data-ui-facility],[data-ui-pfield]'))renderAll()
+      });
+      $('#top-export-json').addEventListener('click',()=>downloadJSON());
+      $('#top-import-json').addEventListener('change',importJSON);
+      $('#top-export-excel').addEventListener('click',exportExcel);
+      $('#top-print-report').addEventListener('click',printReport);
       $('#export-json').addEventListener('click',()=>downloadJSON());
       $('#import-json').addEventListener('change',importJSON);
       $('#export-excel').addEventListener('click',exportExcel);
